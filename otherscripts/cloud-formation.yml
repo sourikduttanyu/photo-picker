@@ -1,0 +1,140 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template for Lambda functions, API Gateway, and S3 buckets.
+
+Resources:
+  # S3 Bucket for Photos Storage
+  PhotosStorageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: photos-storage-bucket
+      AccessControl: Private
+
+  # S3 Bucket for Frontend Hosting
+  FrontendBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: frontend-bucket
+      WebsiteConfiguration:
+        IndexDocument: index.html
+      AccessControl: PublicRead
+
+  # Lambda Function for Search
+  SearchLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: search-photos
+      Runtime: python3.9
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Handler: lambda_function.lambda_handler
+      Code:
+        ZipFile: |
+          import json
+          def lambda_handler(event, context):
+              return {
+                  "statusCode": 200,
+                  "body": json.dumps("Search Lambda Function")
+              }
+
+  # Lambda Function for Indexing Photos
+  IndexPhotosLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: index-photos
+      Runtime: python3.9
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Handler: lambda_function.lambda_handler
+      Code:
+        ZipFile: |
+          import json
+          def lambda_handler(event, context):
+              return {
+                  "statusCode": 200,
+                  "body": json.dumps("Index Photos Lambda Function")
+              }
+
+  # API Gateway
+  PhotoSearchAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: PhotoSearchAPI
+
+  # API Gateway Resource for /photos
+  PhotosResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt PhotoSearchAPI.RootResourceId
+      PathPart: photos
+      RestApiId: !Ref PhotoSearchAPI
+
+  # API Gateway Method for PUT /photos
+  PhotosPutMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref PhotoSearchAPI
+      ResourceId: !Ref PhotosResource
+      HttpMethod: PUT
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: PUT
+        Uri: !Sub
+          - "arn:aws:apigateway:${Region}:s3:path/${BucketName}/{object}"
+          - BucketName: !Ref PhotosStorageBucket
+            Region: !Ref "AWS::Region"
+
+  # API Gateway Resource for /search
+  SearchResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt PhotoSearchAPI.RootResourceId
+      PathPart: search
+      RestApiId: !Ref PhotoSearchAPI
+
+  # API Gateway Method for GET /search
+  SearchGetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref PhotoSearchAPI
+      ResourceId: !Ref SearchResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - "arn:aws:apigateway:${Region}:lambda:path/2015-03-31/functions/${SearchLambdaArn}/invocations"
+          - SearchLambdaArn: !GetAtt SearchLambda.Arn
+            Region: !Ref "AWS::Region"
+
+  # Lambda Execution Role
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: LambdaBasicExecution
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource: !Sub "arn:aws:s3:::photos-storage-bucket/*"
+
+Outputs:
+  FrontendURL:
+    Description: "Frontend bucket website URL"
+    Value: !GetAtt FrontendBucket.WebsiteURL

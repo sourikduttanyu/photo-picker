@@ -1,0 +1,171 @@
+/* Base Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #e9ecef; /* Light grey background */
+    color: #495057; /* Dark grey text */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.heading {
+    background-color: #007bff; /* Bootstrap primary blue */
+    color: #fff; /* White text for heading */
+    padding: 20px;
+    text-align: center;
+}
+
+.heading h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.card {
+    background-color: #ffffff; /* White background for card */
+    margin-bottom: 20px;
+    padding: 20px 40px; /* Increased side padding for more space */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+
+.searchbar {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #ced4da; /* Grey border */
+    border-radius: 24px;
+    margin: 20px 0;
+}
+
+.searchbar-wrapper {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+}
+
+.searchbar-left {
+    padding: 0 16px;
+}
+
+.search-icon {
+    margin-top: 3px;
+    color: #9aa0a6;
+    height: 20px;
+    line-height: 20px;
+    width: 20px;
+    cursor: pointer;
+  }
+
+.searchbar-icon {
+    display: inline-block;
+    fill: currentColor;
+    cursor: pointer;
+  }
+
+.searchbar-input {
+    flex-grow: 1;
+    border: none;
+
+    font-size: 1rem;
+    outline: none;
+    border-radius: 24px;
+}
+
+/* Mimic a 'search button' visual */
+.searchbar-input::placeholder {
+    color: #95a5a6; /* Placeholder text color */
+}
+
+/* Buttons */
+.btn {
+    background-color: #28a745; /* Bootstrap success green */
+    color: white;
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn:hover {
+    background-color: #218838; /* Darken button on hover */
+}
+
+/* Upload box */
+.drop_box {
+    border: 2px dashed #ced4da;
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.drop_box header h4 {
+    margin: 0 0 10px 0;
+    color: #495057;
+}
+
+.drop_box p {
+    margin: 0;
+    color: #6c757d; /* Bootstrap secondary text color */
+}
+
+/* Banner section */
+.banner-section {
+    background-color: #f8f9fa; /* Lighter grey for banner */
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.banner-section img {
+    flex: 0 0 40%; /* Each image will take up 40% of the container's width */
+    max-height: 200px; /* Adjust the height as needed */
+    width: auto; /* Maintains aspect ratio */
+    padding: 10px 10px;
+    border: 2px solid #ffffff; /* Adds a white border */
+    margin: 5px; /* Adds space around images */
+    box-sizing: border-box; /* Includes border and padding in the element's total width and height */
+    border-radius: 8px; /* Smooths the corners of the images */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.banner-section img:hover {
+    transform: scale(1.7); /* Slightly enlarges the image on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhances shadow on hover for a 'lifted' effect */
+}
+
+.search-button {
+    background-color: #007bff; /* Blue background, similar to the heading for consistency */
+    color: white; /* White text color for contrast */
+    font-size: 1.3rem; /* Standard font size for buttons */
+    padding: 10px 10px;
+    border: none; /* No border for a modern look */
+    border-radius: 20px; /* Slightly rounded corners */
+    cursor: pointer; /* Cursor changes to pointer to indicate a clickable button */
+    transition: background-color 0.2s, box-shadow 0.2s; /* Transition for interactive states */
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+.search-button:hover {
+    background-color: #0056b3; /* Darker shade of blue on hover for interactive feedback */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Slightly more pronounced shadow on hover */
+}
+
+.search-button:focus {
+    outline: none; /* Removes the default focus outline */
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); /* Custom focus style for accessibility */
+}
+
+
+  
